@@ -31,7 +31,7 @@ namespace Application\Controller {
          */
         public function DefaultAction(\Exception $err)
         {
-            $this->sendErrorHeader(Response::STATUS_INTERNAL_SERVER_ERROR, $err->getMessage());
+            //$this->sendErrorHeader(Response::STATUS_INTERNAL_SERVER_ERROR, $err->getMessage());
             $this->data->error = '500';
             $this->data->message = 'Error! ' . $err->getMessage();
             $this->greut->render(['Error' ,  'Index']);
@@ -45,7 +45,7 @@ namespace Application\Controller {
          */
         public function Err404Action(\Exception $err)
         {
-            $this->sendErrorHeader(Response::STATUS_NOT_FOUND, $err->getMessage());
+            //$this->sendErrorHeader(Response::STATUS_NOT_FOUND, $err->getMessage());
 
             $this->data->error = '404';
             $this->data->message = 'Not found! ' . $err->getMessage();

@@ -57,8 +57,10 @@
       <!-- Example row of columns -->
 
     <?php
+
       $f = new \Hoa\Session\Flash('notif.box');
-      echo $f['title'].' '.$f['content'];
+      if($f->isLocked() === true)
+        echo $f['title'].' '.$f['content'];
 
     ?>
 

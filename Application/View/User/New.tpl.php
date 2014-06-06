@@ -14,7 +14,7 @@
             echo $this->form->input('Password' ,'Mot de passe' , 'password');
             echo $this->form->input('Confirmation du mot de passe' ,'Mot de passe' , 'password' , 'rpassword');
             echo $this->form->input('Email' , '' , 'email');
-            echo $this->form->input('Identifiant');
+            echo $this->form->input('Nom' , '' , '' , 'name');
             echo $this->form->submit();
         ?>
 </form>

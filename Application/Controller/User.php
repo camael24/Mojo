@@ -14,26 +14,65 @@ namespace Application\Controller {
 
         public function indexAction()
         {
-                //Get self profile !!
+            $user = new \Application\Model\Record\User();
+
+            $query = $this->router->getQuery();
+            $page = isset($query['page']) ? $query['page'] : 1;
+            $page = $page -1;
+            $total = $user->count();
+
+            if($page <= 0 )
+                $page = 0;
+
+            if($page > $total)
+                $page = $total;
+
+            $nbPerPage = 1;
+            $all = $user->getAll($page , $nbPerPage);
+            $this->data->page = $page;
+            $this->data->total = ($total/$nbPerPage);
+            $this->data->all = $all;
+
+            $previous = $page - 1;
+            if($previous <= 0)
+                $previous = 0;
+
+            $next = $page + 1;
+            if($next >= $total)
+                $next = $total;
+
+            $this->data->prev = $previous;
+            $this->data->next  = $next;
+
+
+            $this->greut->render();
         }
 
         public function NewAction()
         {
-                $this->greut->render();
+            $this->greut->render();
         }
 
+        public function ShowAction($user_id) {
+
+            $this->data->user = new \Application\Model\Mapped\User($user_id);
+            $this->greut->render();
+        }
         public function CreateAction()
         {
-            $s = new \Hoa\Session\Session('form');
+            $session = new \Hoa\Session\Session('form');
+            if ($this->post->check(['login' , 'password' , 'rpassword' , 'email' , 'name' ]) === false) {
 
-            if ($this->post->check(['login' , 'password' , 'rpassword' , 'email' , 'identifiant' ]) === false) {
-                $session = new \Hoa\Session\Session('form');
-                $session['field'] = $this->post->all();
-                $this->redirect->redirect('newUser');
-            }
+               $session['field'] = $this->post->all();
+               $this->redirect->redirect('newUser');
+           }
 
-            $s->forgetMe();
+            $session->forgetMe();
+            $user = new \Application\Model\Record\User();
+            $user->newUser($this->post['login'], $this->post['password'], $this->post['email'] , $this->post['name']);
 
+
+            $this->redirect->redirect('indexUser');
         }
     }
 }

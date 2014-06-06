@@ -21,6 +21,7 @@ namespace Application\Controller\Kit {
 
             protected function _box($type , $title , $content)
             {
+
                 $f = new \Hoa\Session\Flash('notif.box');
                 $f['type'] =  $type;
                 $f['title'] = $title;

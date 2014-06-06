@@ -16,7 +16,7 @@ namespace Mojo\Model {
 
         public function __construct()
         {
-            $this->_mapping = $this->map();
+            $this->_mapping = call_user_func_array([$this , 'map'], func_get_args());
         }
 
         public static function mode($save , $update = self::UPDATE_CHANGE_VALUE)
@@ -79,7 +79,7 @@ namespace Mojo\Model {
             $this->offsetSet($offset , null);
         }
 
-        protected   function map() {var_dump('d');}
+        protected   function map() {}
 
         protected  function unmap($column , $value) {}
 

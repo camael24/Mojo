@@ -24,7 +24,7 @@ use Hoa\Database\Query\Select;
 
             }
 
-            public function newUser($login , $password, $email)
+            public function newUser($login , $password, $email , $name)
             {
                 $insert = new Insert;
                 $insert
@@ -33,7 +33,7 @@ use Hoa\Database\Query\Select;
                     ->values('null' , '?' , '?' , '?', '?' , '?', '?' , '?' , '?', '?' , '?');
 
                         $this
-                        ->sql($insert , [$login , sha1($password) , $login, $email, crc32(time()) , '0', time() , '0', '' , '']);
+                        ->sql($insert , [$login , sha1($password) , $name, $email, md5(time()) , '0', time() , '0', '' , '']);
             }
 
             public function getByLogin($login)
@@ -56,5 +56,31 @@ use Hoa\Database\Query\Select;
                 return $this->sql($select , [$id])->first();
             }
 
+            public function getAll($start = null , $nb = 15)
+            {
+             $select = new Select();
+                $select
+                    ->from('user')
+                    ->where('activated = 1');
+
+
+            if( $start !== null)
+                    $select->limit($start*$nb , $nb);
+
+
+
+                return $this->sql($select , [])->all();
+            }
+
+        public function count(){
+
+            $s = $this->sql('SELECT COUNT(*) FROM user WHERE activated = 1;')->first();
+            $s = array_values($s);
+
+            if(array_key_exists(0, $s))
+                return intval($s[0]);
+
+        return 0;
+        }
     }
 }

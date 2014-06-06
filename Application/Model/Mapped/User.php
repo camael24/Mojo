@@ -8,7 +8,10 @@ namespace Application\Model\Mapped {
             */
             protected function map()
             {
-                return $this->getById(1); // Special action , in design pattern ACTIVE RECORD define in  \Application\Model\Record\User
+                $id = func_get_arg(0);
+
+
+                return $this->getById($id); // Special action , in design pattern ACTIVE RECORD define in  \Application\Model\Record\User
             }
 
             /**
@@ -16,7 +19,7 @@ namespace Application\Model\Mapped {
             */
             protected function unmap($cols , $value)
             {
-                //echo '<pre>Update cols : '.$cols.' => '.$value.'</pre>';
+                echo '<pre>Update cols : '.$cols.' => '.$value.'</pre>';
             }
 
             /**
@@ -24,7 +27,7 @@ namespace Application\Model\Mapped {
             */
             protected function _update(Array $data = array())
             {
-                //echo '<pre>Update '.print_r($data , true).'</pre>';
+                echo '<pre>Update '.print_r($data , true).'</pre>';
             }
 
     }
