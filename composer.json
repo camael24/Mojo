@@ -1,0 +1,41 @@
+{
+    "repositories": [{
+            "type": "package",
+            "package": {
+                "name": "hoa/model",
+                "version": "dev-master",
+                "source": {
+                    "type": "git",
+                    "url": "https://github.com/hoaproject/Model",
+                    "reference": "cd4e4b9b035ad52706924d6bfd06300a6e6280a7"
+                },
+                "target-dir": "Hoa/Model",
+                "autoload": {
+                    "psr-0": {
+                        "Hoa\\Model": "."
+                    }
+                }
+            }
+        }, {
+            "type": "vcs",
+            "url": "http://github.com/camael24/framework"
+        }
+
+    ],
+    "name": "sohoa/sohoa",
+    "require": {
+        "sohoa/framework": "dev-f/generate_controller",
+        "hoa/database": "dev-master",
+        "hoa/model" : "dev-master",
+        "hoa/console" : "dev-master"
+    },
+    "config": {
+        "bin-dir": "Binaries"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mojo\\": "./"
+        }
+    },
+    "minimum-stability": "dev"
+}

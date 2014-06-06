@@ -1,0 +1,4 @@
+vendor/*
+Binaries/*
+dploy.yaml
+composer.lock

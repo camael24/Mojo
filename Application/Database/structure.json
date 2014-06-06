@@ -1,0 +1,16 @@
+{
+    "_foo" : {
+        "type" : "VARCHAR(500)"
+    },
+    "_default" : {
+        "ai" : "AUTO_INCREMENT"
+    },
+    "_id" : {
+        "type" : "AUTO_INCREMENT"
+    },
+    "user" : {
+        "#" : {},
+        "acl" : {"_scope" : "foo"},
+        "&group"  : {}
+    }
+}
