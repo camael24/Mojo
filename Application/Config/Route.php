@@ -5,7 +5,7 @@
 // Defines the defaults route
 $this->get('/', ['as' => 'root','to' => 'Main#index']);
 $this->resource('admin');
-$this->resource('user');
+$this->resource('user'); // Prefix a route
 
 //$this->any('/(?<controller>[a-zA-Z_]\w*)/(?<action>[a-zA-Z_]\w*)/(?<value>.+)?');
 
