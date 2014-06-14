@@ -19,17 +19,18 @@ namespace Mojo\Model {
             $this->_mapping = call_user_func_array([$this , 'map'], func_get_args());
         }
 
-        public static function mode($save , $update = self::UPDATE_CHANGE_VALUE)
+        public static function mode($save = null, $update = self::UPDATE_CHANGE_VALUE)
         {
             if($update === static::UPDATE_ALL_VALUE or $update === static::UPDATE_CHANGE_VALUE)
                 static::$_update = $update;
             else
                 throw new Exception("No good value of update mode", 0);
 
-            if($save === static::SAVE_IMMEDIATE or $save === static::SAVE_MANU)
-                static::$_save = $save;
-            else
-                throw new Exception("No good value of save mode", 1);
+            if($save !== null)
+                if($save === static::SAVE_IMMEDIATE or $save === static::SAVE_MANU)
+                    static::$_save = $save;
+                else
+                    throw new Exception("No good value of save mode", 1);
         }
 
         public function update()
@@ -73,6 +74,7 @@ namespace Mojo\Model {
             else
                 if(!in_array($offset, $this->_changed))
                     $this->_changed[] = $offset;
+
         }
         public function offsetUnset($offset)
         {
@@ -83,7 +85,9 @@ namespace Mojo\Model {
 
         protected  function unmap($column , $value) {}
 
-        protected function _update(Array $array = array()) {}
+        protected function _update(Array $array = array())
+        {
+        }
 
         public  function dump()
         {

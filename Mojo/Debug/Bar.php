@@ -178,8 +178,8 @@ return $out;
     }
         public function render()
         {
-$out = '<ul class="nav nav-tabs">
-  <li class="disabled"><a href="#" data-toggle="tab"><i class=" glyphicon glyphicon-exclamation-sign"></i></a></li>
+$out = '<ul class="nav nav-tabs" data-dbg="hide">
+  <li class="disabled"><a href="#" data-toggle="tab"><i class="ddb glyphicon glyphicon-arrow-up"></i></a></li>
   <li><a href="#mojo" data-toggle="tab">Mojo</a></li>
   <li><a href="#router" data-toggle="tab">Router</a></li>
 
@@ -187,7 +187,7 @@ $out = '<ul class="nav nav-tabs">
   <li><a href="#messages" data-toggle="tab">Messages</a></li>
   <li><a href="#forms" data-toggle="tab">Forms</a></li>
 </ul>
-<div class="tab-content">
+<div id="ddb" class="tab-content dbg-mini">
   <div class="tab-pane" id="mojo">'.$this->_mojo().'</div>
   <div class="tab-pane" id="router">'.$this->_router().'</div>
   <div class="tab-pane" id="session">'.$this->_session().'</div>

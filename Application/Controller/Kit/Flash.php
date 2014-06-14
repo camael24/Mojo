@@ -4,14 +4,14 @@ namespace Application\Controller\Kit {
     {
             private $_data = array();
 
-            public function construct()
+            public function error($title , $content)
             {
-
+                $this->_box('danger' , $title , $content);
             }
 
             public function alert($title , $content)
             {
-                $this->_box('alert' , $title , $content);
+                $this->_box('warning' , $title , $content);
             }
 
             public function success($title , $content)
@@ -21,7 +21,6 @@ namespace Application\Controller\Kit {
 
             protected function _box($type , $title , $content)
             {
-
                 $f = new \Hoa\Session\Flash('notif.box');
                 $f['type'] =  $type;
                 $f['title'] = $title;

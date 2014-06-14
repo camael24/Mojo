@@ -15,6 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/jumbotron.css" rel="stylesheet">
+    <link href="/css/bootstrap-tagsinput.css" rel="stylesheet">
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -37,7 +38,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Mojo Administration Tools</a>
+          <a class="navbar-brand" href="/admin/">Mojo Administration Tools</a>
         </div>
         <div class="navbar-collapse collapse">
         <?php
@@ -59,14 +60,19 @@
     <?php
 
       $f = new \Hoa\Session\Flash('notif.box');
-      if($f->isLocked() === true)
-        echo $f['title'].' '.$f['content'];
+      if($f->isLocked() === false)
+        switch ($f['type']) {
+          case 'success':
+            echo '<div class="alert alert-success"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
+            break;
+          case 'alert':
+            echo '<div class="alert alert-danger"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
+            break;
+          default:
+            # code...
+            break;
+        }
 
-    ?>
-
-
-
-      <?php
         $this->block('content'); $this->endBlock();
 
       ?>
@@ -82,5 +88,8 @@
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="/js/bootstrap.js"></script>
+    <script src="/js/bootstrap-tagsinput.js"></script>
+    <script src="/js/dbg.js"></script>
+    <script src="/js/admin.js"></script>
   </body>
 </html>

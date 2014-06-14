@@ -1,5 +1,6 @@
 {
-    "repositories": [{
+    "repositories": [
+        {
             "type": "package",
             "package": {
                 "name": "hoa/model",
@@ -16,7 +17,8 @@
                     }
                 }
             }
-        }, {
+        },
+        {
             "type": "vcs",
             "url": "http://github.com/camael24/framework"
         }
@@ -27,7 +29,8 @@
         "sohoa/framework": "dev-f/generate_controller",
         "hoa/database": "dev-master",
         "hoa/model" : "dev-master",
-        "hoa/console" : "dev-master"
+        "hoa/console" : "dev-master",
+        "hoa/acl" : "dev-master"
     },
     "config": {
         "bin-dir": "Binaries"

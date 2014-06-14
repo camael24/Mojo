@@ -4,15 +4,13 @@
 
 // Defines the defaults route
 $this->get('/', ['as' => 'root','to' => 'Main#index']);
+$this->get('/logout', ['as' => 'logout','to' => 'Main#logout']);
+$this->get('/user/(?<user_id>[^/]+)/activate', ['as' => 'activate','to' => 'User#activate']);
+$this->get('/user/(?<user_id>[^/]+)/unactivate', ['as' => 'unactivate','to' => 'User#unactivate']);
+$this->get('/user/(?<user_id>[^/]+)/delete', ['as' => 'delete','to' => 'User#delete']);
 $this->resource('admin');
 $this->resource('user'); // Prefix a route
+$this->resource('group');
+$this->resource('permission');
 
 //$this->any('/(?<controller>[a-zA-Z_]\w*)/(?<action>[a-zA-Z_]\w*)/(?<value>.+)?');
-
-$err = $this->getFramework()->getErrorHandler();
-
-// The following line allow to transform every php errors as an exception \ErrorException
-$err->handleErrorsAsException();
-
-$err->routeError(\Sohoa\Framework\ErrorHandler::ROUTE_ALL_ERROR, 'Error#Default');
-$err->routeError(\Sohoa\Framework\ErrorHandler::ROUTE_ERROR_404, 'Error#Err404');

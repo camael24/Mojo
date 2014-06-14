@@ -6,10 +6,12 @@ namespace Application\Model\Mapped {
             /**
             * Call by __construct for hydrate model
             */
+            protected $_id = 0;
+
             protected function map()
             {
-                $id = func_get_arg(0);
-
+                $id         = func_get_arg(0);
+                $this->_id  = $id;
 
                 return $this->getById($id); // Special action , in design pattern ACTIVE RECORD define in  \Application\Model\Record\User
             }
@@ -27,7 +29,8 @@ namespace Application\Model\Mapped {
             */
             protected function _update(Array $data = array())
             {
-                echo '<pre>Update '.print_r($data , true).'</pre>';
+
+                $this->set($this->_id , $data);
             }
 
     }
