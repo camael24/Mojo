@@ -26,6 +26,11 @@ namespace Mojo\Form {
 
         }
 
+        public static function isValid($name)
+        {
+            return static::get($name)->valid();
+        }
+
         public function getAllData()
         {
             return $this->_data;
@@ -58,6 +63,11 @@ namespace Mojo\Form {
 
         public function valid()
         {
+
+            if (empty($this->_data)) {
+                $this->_data = $_POST;
+            }
+
             $validate = new \Mojo\Form\Validate\Check($this);
 
             return $validate->isValid();

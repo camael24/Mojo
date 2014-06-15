@@ -11,7 +11,7 @@ namespace Application\Controller {
         {
             $form = \Mojo\Form\Form::get('foo');
             $form->setData([
-              'foo' => 'bas',
+              'foo' => 'foo+bb@bar.com',
               'bar' => 'll555',
               'quz' => 'worl',
               'o1'  => 'hello',
@@ -19,7 +19,7 @@ namespace Application\Controller {
               'fibox' => 'hello'
             ]);
 
-            // $form->valid();
+            var_dump(\Mojo\Form\Form::isValid('foo'));
 
             $this->greut->render();
         }

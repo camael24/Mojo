@@ -10,7 +10,7 @@ $form[] = (new \Mojo\Form\Input())
             ->id('foo')
             ->label('Hello World')
             ->placeholder('hello')
-            ->validate('required|min:2|max:3');
+            ->validate('required|min:2|email');
 
 $form[] = (new \Mojo\Form\Textarea())
             ->id('bar')
