@@ -1,5 +1,6 @@
 <?php
 namespace Mojo\Form {
+
     class Element implements \ArrayAccess
     {
         protected $_name = '';
@@ -8,23 +9,28 @@ namespace Mojo\Form {
         protected $_child = array();
         protected $_id = null;
         protected $_label = null;
+        protected $_parent = null;
+        protected $_validate = array();
 
-        public function __call($name , $value)
+        public function __call($name, $value)
         {
             $name = str_replace('_', '-', $name);
-            if(count($value) > 0)
-                if($this->_newAttributes === true or array_key_exists($name, $this->_attributes))
-                    $this->setAttribute($name , $value);
-                else
-                    throw new Exception("You can not add this attribute (%s)", 1 , array($name));
+            if (count($value) > 0) {
+                if ($this->_newAttributes === true or array_key_exists($name, $this->_attributes)) {
+                    $this->setAttribute($name, $value);
+                } else {
+                    throw new Exception("You can not add this attribute (%s)", 1, array($name));
+                }
+            }
 
             return $this;
         }
 
-        public function setAttribute($name , $value)
+        public function setAttribute($name, $value)
         {
-            if(is_array($value))
+            if (is_array($value)) {
                 $value = array_shift($value);
+            }
 
             $this->_attributes[$name] = $value;
         }
@@ -44,6 +50,11 @@ namespace Mojo\Form {
             return $this;
         }
 
+        public function setParent(Element $parent)
+        {
+            $this->_parent = $parent;
+        }
+
         public function getAttributes()
         {
             return $this->_attributes;
@@ -59,12 +70,13 @@ namespace Mojo\Form {
             return $this->_child[$offset];
         }
 
-        public function offsetSet($offset , $value)
+        public function offsetSet($offset, $value)
         {
-            if($offset === null)
-                $this->_child[] = $value;
-            else
+            if ($offset === null) {
+                    $this->_child[] = $value;
+            } else {
                 $this->_child[$offset] = $value;
+            }
         }
 
         public function offsetUnset($offset)
@@ -96,9 +108,11 @@ namespace Mojo\Form {
         {
             $out = array();
 
-            foreach ($this->_attributes as $name => $value)
-                if($value !== null)
-                    $out[] = sprintf('%s="%s"' , $name , $value);
+            foreach ($this->_attributes as $name => $value) {
+                if ($value !== null) {
+                    $out[] = sprintf('%s="%s"', $name, $value);
+                }
+            }
 
             return implode(' ', $out);
         }
@@ -117,20 +131,40 @@ namespace Mojo\Form {
 
         public function getAttribute($name)
         {
-            if(array_key_exists($name, $this->_attributes))
-
+            if (array_key_exists($name, $this->_attributes)) {
                 return $this->_attributes[$name];
+            }
 
             return null;
         }
 
-        public function defaultAttribute($name , $value)
+        public function defaultAttribute($name, $value)
         {
             $attr = $this->getAttribute($name);
 
-            if($attr === null)
-                $this->setAttribute($name , $value);
+            if ($attr === null) {
+                $this->setAttribute($name, $value);
+            }
         }
 
+        public function validate($string)
+        {
+            $array           = [',' , ' ', ';' , '_'];
+            $string          = str_replace($array, '|', $string);
+            $array           = explode('|', $string);
+            $this->_validate = array_merge($array, $this->_validate);
+
+            return $this;
+        }
+
+        public function getValidate()
+        {
+            return $this->_validate;
+        }
+
+        public function getParent()
+        {
+            return $this->_parent;
+        }
     }
 }

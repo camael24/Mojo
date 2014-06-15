@@ -1,15 +1,20 @@
 <?php
 namespace Mojo\Form\Theme {
+
     class Bootstrap extends Generic
     {
-        protected $_sizeLabel = 'col-sm-2';
+        protected $_sizeLabel   = 'col-sm-2';
         protected $_sizeControl = 'col-sm-5';
-        public function form($form)
+
+        public function form($form, $validate)
         {
 
+            $this->_errors = $validate->getErrors();
+            $this->setParent($form);
             $out = '<form class="form-horizontal" role="form" '.$form->getAttributeAsString().'>';
-            foreach ($form->getChilds() as $child)
+            foreach ($form->getChilds() as $child) {
                 $out .= $this->item($child);
+            }
 
             $out .= '</form>';
 
@@ -18,15 +23,12 @@ namespace Mojo\Form\Theme {
 
         public function item($item)
         {
-            if(is_object($item))
+            $class = '';
+            if (is_object($item)) {
                 $class = get_class($item);
-            else
-                $class = 'Text';
+            }
 
             switch ($class) {
-                case 'Text':
-                    return $this->text($item);
-                    break;
                 case 'Mojo\Form\Textarea':
                     return $this->textarea($item);
                     break;
@@ -40,20 +42,54 @@ namespace Mojo\Form\Theme {
                     return $this->select($item);
                     break;
                 case 'Mojo\Form\Submit':
+                    return $this->submit($item);
+                    break;
+                case 'Mojo\Form\Hidden':
+                    return $this->hidden($item);
+                    break;
                 case 'Mojo\Form\Input':
                     return $this->input($item);
                     break;
+                case 'Text':
                 default:
-                    # code...
+                    return $this->text($item);
                     break;
             }
         }
 
         public function input($item)
         {
+
+            $name   = $item->getAttribute('name');
+            $value  = $this->_parent->getData($name);
+
+            if ($value !== null) {
+                $item->setAttribute('value', $value);
+            }
+
+            $errorLabel = '';
+            if (($error = $this->getError($name)) !== null) {
+                foreach ($error as $value) {
+                    $errorLabel .= '<span class="help-block">'.$value.'</span>';
+                }
+            }
+
+            return '<div class="form-group '.(($this->hasError($name)) ? 'has-error' : '').'">
+            <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
+            <div class="'.$this->_sizeControl.'"><'.$item->getName().' '.$item->getAttributeAsString().' class="form-control" />'.$errorLabel.'</div>
+            </div>';
+        }
+
+        public function hidden($item)
+        {
+            return '<div class="form-group"><label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label><div class="'.$this->_sizeControl.'"><'.$item->getName().' '.$item->getAttributeAsString().' class="form-control" /></div></div>';
+        }
+
+        public function submit($item)
+        {
             return '<div class="form-group">
             <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
-            <div class="'.$this->_sizeControl.'"><'.$item->getName().' '.$item->getAttributeAsString().' class="form-control" /></div>
+            <div class="'.$this->_sizeControl.'"><'.$item->getName().' '.$item->getAttributeAsString().' /></div>
             </div>';
         }
 
@@ -66,34 +102,64 @@ namespace Mojo\Form\Theme {
             <label class="'.$this->_sizeLabel.' control-label">'.$label.'</label>
             <div class="'.$this->_sizeControl.'"><p class="form-control-static">'.$value.'</p>
             </div></div>';
+
         }
 
         public function textarea($item)
         {
+            $item->defaultAttribute('class', 'form-control');
             $value = $item->extractAttribute('value');
-            $item->defaultAttribute('class' , 'form-control');
+            $name  = $item->getAttribute('name');
+            $data  = $this->_parent->getData($name);
 
-            return '<div class="form-group">
+            if ($data !== null) {
+                $value = $data;
+            }
+
+            $errorLabel = '';
+            if (($errors = $this->getError($name)) !== null) {
+                foreach ($errors as $error) {
+                    $errorLabel .= '<span class="help-block">'.$error.'</span>';
+                }
+            }
+
+            return '<div class="form-group '.(($this->hasError($name)) ? 'has-error' : '').'">
             <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
             <div class="'.$this->_sizeControl.'"><'.$item->getName().' '.$item->getAttributeAsString().'>'.$value.'
-            </'.$item->getName().'></div>
+            </'.$item->getName().'>'.$errorLabel.'</div>
             </div>';
 
         }
 
         public function select($item)
         {
-            $item->defaultAttribute('class' , 'form-control');
+
+            $item->defaultAttribute('class', 'form-control');
+            $selectValue = $this->_parent->getData($item->getAttribute('name'));
+            $name = $item->getAttribute('name');
+            $errorLabel = '';
+            if (($errors = $this->getError($name)) !== null) {
+                foreach ($errors as $error) {
+                    $errorLabel .= '<span class="help-block">'.$error.'</span>';
+                }
+            }
 
             $select = '<'.$item->getName().' '.$item->getAttributeAsString().'>';
-            foreach ($item->getOptions() as $value)
-                if($value[1] !== null)
-                    $select .= '<option value="'.$value[1].'">'.$value[0].'</option>';
-                else
-                    $select .= '<option>'.$value[0].'</option>';
-            $select .= '</'.$item->getName().'>';
+            foreach ($item->getOptions() as $value) {
+                if ($value[1] !== null) {
+                    $select .= '<option value="'.$value[1].'" '.
+                    (($selectValue !== null and $selectValue === $value[1]) ? 'selected' : '')
+                    .'>'.$value[0].'</option>';
+                } else {
+                    $select .= '<option'.
+                    (($selectValue !== null and $selectValue === $value[0]) ? ' selected="selected"' : '')
+                    .'>'.$value[0].'</option>';
+                }
+            }
 
-            return '<div class="form-group">
+            $select .= '</'.$item->getName().'>'.$errorLabel;
+
+            return '<div class="form-group  '.(($this->hasError($name)) ? 'has-error' : '').'">
             <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
             <div class="'.$this->_sizeControl.'">'.$select.'</div>
             </div>';
@@ -101,9 +167,13 @@ namespace Mojo\Form\Theme {
 
         public function check($item)
         {
+
             $select = '';
-            foreach ($item->getOptions() as $value)
-                    $select .= '<label class="checkbox-inline"><'.$item->getName().' '.$item->getAttributeAsString().' name="'.$value[2].'" value="'.$value[1].'" />'.$value[0].'</label>';
+            foreach ($item->getOptions() as $value) {
+                    $select .= '<label class="checkbox-inline"><'.$item->getName().' '.$item->getAttributeAsString().' name="'.$value[2].'" value="'.$value[1].'" '.
+                    (($this->_parent->getData($value[2]) !== null and $this->_parent->getData($value[2]) === $value[1]) ? 'checked' : '')
+                     .'/>'.$value[0].'</label>';
+            }
 
             return '<div class="form-group">
             <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
@@ -114,13 +184,25 @@ namespace Mojo\Form\Theme {
         public function radio($item)
         {
             $name = $item->extractAttribute('name');
-            $select = '';
-            foreach ($item->getOptions() as $value)
-                    $select .= '<label class="radio-inline"><'.$item->getName().' '.$item->getAttributeAsString().' name="'.$name.'" value="'.$value[1].'" />'.$value[0].'</label>';
+            $selectValue = $this->_parent->getData($name);
 
-            return '<div class="form-group">
+            $errorLabel = '';
+            if (($errors = $this->getError($name)) !== null) {
+                foreach ($errors as $error) {
+                    $errorLabel .= '<span class="help-block">'.$error.'</span>';
+                }
+            }
+
+            $select = '';
+            foreach ($item->getOptions() as $value) {
+                    $select .= '<label class="radio-inline"><'.$item->getName().' '.$item->getAttributeAsString().' name="'.$name.'" value="'.$value[1].'" '.
+                    (($selectValue !== null and $selectValue === $value[1]) ? 'checked' : '')
+                    .' />'.$value[0].'</label>';
+            }
+
+            return '<div class="form-group '.(($this->hasError($name)) ? 'has-error' : '').'">
             <label for="'.$item->getId().'" class="'.$this->_sizeLabel.' control-label">'.$item->getLabel().'</label>
-            <div class="'.$this->_sizeControl.'">'.$select.'</div>
+            <div class="'.$this->_sizeControl.'">'.$select.$errorLabel.'</div>
             </div>';
         }
     }

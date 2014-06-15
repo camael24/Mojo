@@ -1,11 +1,12 @@
 <?php
 namespace Mojo\Form {
+
     class Checkbox extends Select
     {
         protected $_name = 'input';
         protected $_attributes = ['type' => 'checkbox'];
 
-        public function option($value , $label , $name)
+        public function option($value, $label, $name)
         {
 
             $this->_options[] = [$value , $label ,$name];
@@ -13,5 +14,14 @@ namespace Mojo\Form {
             return $this;
         }
 
+        public function name()
+        {
+            throw new Exception("Can not define an name or id of checkbox", 0);
+        }
+
+        public function validate()
+        {
+            throw new Exception("Can not define an validator on checkbox", 1);
+        }
     }
 }

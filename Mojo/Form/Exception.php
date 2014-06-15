@@ -1,4 +1,7 @@
 <?php
 namespace Mojo\Form {
-    class Exception extends \Hoa\Core\Exception\Exception {}
+
+    class Exception extends \Hoa\Core\Exception\Exception
+    {
+    }
 }
