@@ -26,18 +26,12 @@ namespace Mojo\Form {
 
         }
 
-        public static function isValid($name)
+        public function getData($name = null)
         {
-            return static::get($name)->valid();
-        }
+            if ($name === null) {
+                return $this->_data;
+            }
 
-        public function getAllData()
-        {
-            return $this->_data;
-        }
-
-        public function getData($name)
-        {
             if (array_key_exists($name, $this->_data)) {
                 return $this->_data[$name];
             }
@@ -63,7 +57,6 @@ namespace Mojo\Form {
 
         public function valid()
         {
-
             if (empty($this->_data)) {
                 $this->_data = $_POST;
             }
@@ -71,6 +64,11 @@ namespace Mojo\Form {
             $validate = new \Mojo\Form\Validate\Check($this);
 
             return $validate->isValid();
+        }
+
+        public static function isValid($name)
+        {
+            return static::get($name)->valid();
         }
 
         public function render()

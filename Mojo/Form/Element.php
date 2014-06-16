@@ -10,7 +10,7 @@ namespace Mojo\Form {
         protected $_id = null;
         protected $_label = null;
         protected $_parent = null;
-        protected $_validate = array();
+        protected $_need = array();
 
         public function __call($name, $value)
         {
@@ -147,19 +147,19 @@ namespace Mojo\Form {
             }
         }
 
-        public function validate($string)
+        public function need($string)
         {
             $array           = [',' , ' ', ';' , '_'];
             $string          = str_replace($array, '|', $string);
             $array           = explode('|', $string);
-            $this->_validate = array_merge($array, $this->_validate);
+            $this->_need     = array_merge($array, $this->_need);
 
             return $this;
         }
 
-        public function getValidate()
+        public function getWant()
         {
-            return $this->_validate;
+            return $this->_need;
         }
 
         public function getParent()

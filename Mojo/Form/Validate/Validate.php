@@ -27,5 +27,10 @@ namespace Mojo\Form\Validate {
         {
             return $this->_detail;
         }
+
+        protected function _valid($data, $element)
+        {
+            throw new Exception("You must implements your own function", 0);
+        }
     }
 }

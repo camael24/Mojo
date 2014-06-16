@@ -8,7 +8,6 @@ namespace Mojo\Form\Validate {
 
         protected function _valid($data, $argument)
         {
-
             if (in_array('getOptions', get_class_methods($this->_parent))) {
                 throw new Exception("You cant set Max validator on item %s", 0, array(get_class($this->_parent)));
             }
