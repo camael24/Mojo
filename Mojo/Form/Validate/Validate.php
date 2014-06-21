@@ -5,12 +5,14 @@ namespace Mojo\Form\Validate {
     {
         protected $_detail = '';
         protected $_parent = null;
-        protected $_errors = array();
+        protected $_form   = null;
+        protected $_errors = null;
 
-        public function valid($data, $el, $parent)
+        public function valid($data, $argument, $parent, $form = false)
         {
+            $this->_form   = $form;
             $this->_parent = $parent;
-            $bool = $this->_valid($data, $el);
+            $bool = $this->_valid($data, $argument);
             if ($bool === false) {
                 $this->_errors = $this->getDetail();
             }

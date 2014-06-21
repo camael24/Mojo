@@ -6,11 +6,9 @@ namespace Mojo\Form\Theme {
         protected $_sizeLabel   = 'col-sm-2';
         protected $_sizeControl = 'col-sm-5';
 
-        public function form($form, $validate)
+        public function form($form)
         {
-
-            $this->_errors = $validate->getErrors();
-            $this->setParent($form);
+            $this->setForm($form);
             $out = '<form class="form-horizontal" role="form" '.$form->getAttributeAsString().'>';
             foreach ($form->getChilds() as $child) {
                 $out .= $this->item($child);
@@ -61,7 +59,7 @@ namespace Mojo\Form\Theme {
         {
 
             $name   = $item->getAttribute('name');
-            $value  = $this->_parent->getData($name);
+            $value  = $this->getForm()->getData($name);
 
             if ($value !== null) {
                 $item->setAttribute('value', $value);
@@ -110,7 +108,7 @@ namespace Mojo\Form\Theme {
             $item->defaultAttribute('class', 'form-control');
             $value = $item->extractAttribute('value');
             $name  = $item->getAttribute('name');
-            $data  = $this->_parent->getData($name);
+            $data  = $this->getForm()->getData($name);
 
             if ($data !== null) {
                 $value = $data;
@@ -135,7 +133,7 @@ namespace Mojo\Form\Theme {
         {
 
             $item->defaultAttribute('class', 'form-control');
-            $selectValue = $this->_parent->getData($item->getAttribute('name'));
+            $selectValue = $this->getForm()->getData($item->getAttribute('name'));
             $name = $item->getAttribute('name');
             $errorLabel = '';
             if (($errors = $this->getError($name)) !== null) {
@@ -171,7 +169,7 @@ namespace Mojo\Form\Theme {
             $select = '';
             foreach ($item->getOptions() as $value) {
                     $select .= '<label class="checkbox-inline"><'.$item->getName().' '.$item->getAttributeAsString().' name="'.$value[2].'" value="'.$value[1].'" '.
-                    (($this->_parent->getData($value[2]) !== null and $this->_parent->getData($value[2]) === $value[1]) ? 'checked' : '')
+                    (($this->getForm()->getData($value[2]) !== null and $this->getForm()->getData($value[2]) === $value[1]) ? 'checked' : '')
                      .'/>'.$value[0].'</label>';
             }
 
@@ -184,7 +182,7 @@ namespace Mojo\Form\Theme {
         public function radio($item)
         {
             $name = $item->extractAttribute('name');
-            $selectValue = $this->_parent->getData($name);
+            $selectValue = $this->getForm()->getData($name);
 
             $errorLabel = '';
             if (($errors = $this->getError($name)) !== null) {

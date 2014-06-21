@@ -3,52 +3,53 @@ namespace Mojo\Form\Validate {
 
     class Check
     {
+        private $_isValid = null;
+        private $_id = null;
 
-        protected $_validate = array();
-        protected $_checked  = true;
-        protected $_errors   = array();
-        protected $_childs   = array();
-
-        public function __construct($item)
+        public function __construct($id)
         {
-            $this->_validate = $item->getValidate();
+            $this->_id = $id;
+        }
 
-            foreach ($item->getChilds() as $child) {
-                if (is_object($child) && ($name = $child->getAttribute('name'))!== null) {
-                    $data 	  = $item->getData($name);
-                    $validate = $child->getValidate();
-                    if ($this->check($name, $data, $validate, $child) === false) {
-                        $this->_checked = false;
+        public function isValid(Array $data = array(), $revalidate = false)
+        {
+            if ($revalidate === true or $this->_isValid === null) {
+                $this->_isValid = $this->validate($data);
+            }
+
+            return $this->_isValid;
+        }
+
+        protected function validate(Array $data = array())
+        {
+            $form  = \Mojo\Form\Form::get($this->_id);
+            $valid = true;
+
+            if (empty($data)) {
+                $data = $form->getData();
+            }
+
+            foreach ($form->getChilds() as $child) {
+                $name  = $child->getAttribute('name');
+                $iData = (array_key_exists($name, $data)) ? $data[$name] : null;
+
+                foreach ($child->getNeed() as $val) {
+                    if ($this->valid($val, $child, $iData, $form) === false) {
+                        $valid = false;
                     }
                 }
             }
+
+            return $valid;
         }
 
-        protected function check($name, $data, $validate, $parent)
+        private function valid($validator, $item, $data, $form)
         {
-            $bool = true;
-            foreach ($validate as $el) {
-                $el   = explode(':', $el);
-                $val  = array_shift($el);
-                $instance = dnew('\\Mojo\\Form\\Validate\\'.ucfirst($val));
-                $bool = $instance->valid($data, $el, $parent);
-                if ($bool === false) {
-                    $this->_errors[$name][] = $instance->getErrors();
-                }
-            }
+            $validator   = explode(':', $validator);
+            $val  		 = array_shift($validator);
+            $instance 	 = dnew('\\Mojo\\Form\\Validate\\'.ucfirst($val));
 
-            return $bool;
-        }
-
-        public function isValid()
-        {
-            return $this->_checked;
-
-        }
-
-        public function getErrors()
-        {
-            return $this->_errors;
+            return $instance->valid($data, $validator, $item, $form);
         }
     }
 }

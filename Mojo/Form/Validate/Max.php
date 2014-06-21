@@ -13,7 +13,7 @@ namespace Mojo\Form\Validate {
             }
             $this->max = array_shift($argument);
 
-            return (strlen($data) <= intval($this->max));
+            return (intval($data) <= intval($this->max));
         }
 
         protected function getDetail()

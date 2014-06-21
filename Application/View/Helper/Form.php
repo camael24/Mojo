@@ -13,10 +13,9 @@ namespace Application\View\Helper {
 
     class Form extends View\Helper
     {
-        public function get($name)
+        public function get($name, $data = array())
         {
-            return \Mojo\Form\Form::get('foo')->render();
+            return \Mojo\Form\Form::get($name)->setData($data)->render();
         }
-
     }
 }

@@ -3,12 +3,17 @@ namespace Mojo\Form\Theme {
 
     class Generic
     {
-        protected $_parent = null;
+        protected $_form = null;
         protected $_errors = array();
 
-        public function setParent($parent)
+        public function setForm($form)
         {
-            $this->_parent = $parent;
+            $this->_form = $form;
+        }
+
+        public function getForm()
+        {
+            return $this->_form;
         }
 
         public function hasError($name)

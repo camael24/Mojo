@@ -8,7 +8,6 @@ namespace Mojo\Form {
 
         public function option($value, $label, $name)
         {
-
             $this->_options[] = [$value , $label ,$name];
 
             return $this;
@@ -22,6 +21,17 @@ namespace Mojo\Form {
         public function validate()
         {
             throw new Exception("Can not define an validator on checkbox", 1);
+        }
+
+        public function getAllName()
+        {
+            $o = array();
+
+            foreach ($this->getOptions() as $value) {
+                $o[] = $value[2];
+            }
+
+            return $o;
         }
     }
 }

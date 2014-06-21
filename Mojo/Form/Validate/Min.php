@@ -13,7 +13,7 @@ namespace Mojo\Form\Validate {
             }
             $this->min = array_shift($argument);
 
-            return (strlen($data) >= intval($this->min));
+            return (intval($data) >= intval($this->min));
         }
 
         protected function getDetail()

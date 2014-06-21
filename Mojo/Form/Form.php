@@ -5,6 +5,7 @@ namespace Mojo\Form {
     {
         protected static $_instance = array();
         protected $_name = 'form';
+        protected $_formid = null;
         protected $_theme = null;
         protected $_data = array();
 
@@ -23,7 +24,12 @@ namespace Mojo\Form {
 
         private function __construct($name)
         {
+            $this->_formid = $name;
+        }
 
+        public function getFormId()
+        {
+            return $this->_formid;
         }
 
         public function getData($name = null)
@@ -39,15 +45,19 @@ namespace Mojo\Form {
             return null;
         }
 
-        public function setData(Array $data)
+        public function setData($data = null)
         {
-            $this->_data = $data;
+            if (!empty($data) and is_array($data)) {
+                $this->_data = $data;
+            }
+
+            return $this;
         }
 
         public function setTheme($object)
         {
             $this->_theme = $object;
-            $this->_theme->setParent($this);
+            $this->_theme->setForm($this);
         }
 
         public function getTheme()
@@ -55,26 +65,10 @@ namespace Mojo\Form {
             $this->_theme;
         }
 
-        public function valid()
-        {
-            if (empty($this->_data)) {
-                $this->_data = $_POST;
-            }
-
-            $validate = new \Mojo\Form\Validate\Check($this);
-
-            return $validate->isValid();
-        }
-
-        public static function isValid($name)
-        {
-            return static::get($name)->valid();
-        }
-
         public function render()
         {
             if ($this->_theme !== null) {
-                return $this->_theme->form($this, new \Mojo\Form\Validate\Check($this));
+                return $this->_theme->form($this);
             }
 
             return null;

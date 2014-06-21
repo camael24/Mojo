@@ -7,16 +7,7 @@
 <h1>Inscription</h1>
         <?php
             $s = new \Hoa\Session\Session('form');
-
-            if($s->isEmpty() !== true)
-                $this->form->setData($s['field']);
-
-            echo $this->form->input('Login');
-            echo $this->form->input('Password' ,'Mot de passe' , 'password');
-            echo $this->form->input('Confirmation du mot de passe' ,'Mot de passe' , 'password' , 'rpassword');
-            echo $this->form->input('Email' , '' , 'email');
-            echo $this->form->input('Nom' , '' , '' , 'name');
-            echo $this->form->submit();
+            echo $this->form->get('admin.user', $s['field']);
         ?>
 </form>
 

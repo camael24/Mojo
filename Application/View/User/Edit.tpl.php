@@ -7,18 +7,6 @@
 <h3>Edit - <?php echo $user['login']; ?></h3>
         <?php
 
-            $this->form->setData([
-                'login' => $user['login'],
-                'email' => $user['email'],
-                'name'  => $user['name']
-            ]);
-
-            echo $this->form->input('Login');
-            echo $this->form->input('Password' ,'Mot de passe' , 'password');
-            echo $this->form->input('Confirmation du mot de passe' ,'Mot de passe' , 'password' , 'rpassword');
-            echo $this->form->input('Email' , '' , 'email');
-            echo $this->form->input('Nom' , '' , '' , 'name');
-
         ?>
         <div class="form-group">
             <label for="input'.$id.'" class="col-sm-2 control-label">Groups</label>

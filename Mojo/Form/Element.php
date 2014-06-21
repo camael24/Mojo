@@ -157,7 +157,7 @@ namespace Mojo\Form {
             return $this;
         }
 
-        public function getWant()
+        public function getNeed()
         {
             return $this->_need;
         }

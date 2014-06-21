@@ -7,7 +7,34 @@ namespace Mojo\Form\Validate {
 
         protected function _valid($data, $argument)
         {
-            if (in_array('getOptions', get_class_methods($this->_parent))) {
+            if (in_array('getAllName', get_class_methods($this->_parent))) {
+
+                $name    = $this->_parent->getAllName();
+                $options = $this->_parent->getOptions();
+                $opt     = array();
+                $d       = array();
+
+                foreach ($options as $value) {
+                    $opt[$value[2]] = $value[1];
+                }
+
+                foreach ($name as $value) {
+                    if (($v = $this->_form->getData($value)) !== null) {
+                        $d[$value] = $v;
+                    }
+                }
+
+                $valid = (!empty($d));
+
+                foreach ($d as $key => $value) {
+                    if (array_key_exists($key, $opt) === false or $opt[$key] !== $value) {
+                        $valid = false;
+                    }
+                }
+
+                return $valid;
+
+            } elseif (in_array('getOptions', get_class_methods($this->_parent))) {
                 $options = $this->_parent->getOptions();
                 $opt     = array();
                 foreach ($options as $value) {
