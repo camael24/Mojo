@@ -81,8 +81,6 @@ namespace Tests\Units\Mojo\Form {
             $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid())->isTrue();
             $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => '1']))->isFalse();
             $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => '111111']))->isFalse();
-
-            $this->dump('Validate : Left to test the > and < length');
         }
 
         public function testLengthInRange()
@@ -93,6 +91,10 @@ namespace Tests\Units\Mojo\Form {
                 ->need('length:5:7');
 
             $form->setData(['foo' => 'hello']);
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid())->isTrue();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => 'a']))->isFalse();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => '123456789']))->isFalse();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => '123456']))->isTrue();
         }
 
         public function testLengthMinor()
@@ -103,6 +105,8 @@ namespace Tests\Units\Mojo\Form {
                 ->need('length::7');
 
             $form->setData(['foo' => 'hello']);
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid())->isTrue();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => 'hellobarx']))->isFalse();
         }
 
         public function testLenghtSuperior()
@@ -113,6 +117,22 @@ namespace Tests\Units\Mojo\Form {
                 ->need('length:5:');
 
             $form->setData(['foo' => 'hello']);
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid())->isTrue();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => 'hellobarx']))->isTrue();
+            $this->boolean((new \Mojo\Form\Validate\Check('foo'))->isValid(['foo' => 'hel']))->isFalse();
+        }
+
+        public function testLengthException()
+        {
+            $form   = \Mojo\Form\Form::get('foo');
+            $form[] = (new \Mojo\Form\Input())
+                ->id('foo')
+                ->need('length::');
+
+            $form->setData(['foo' => '1']);
+            $this->exception(function () {
+                (new \Mojo\Form\Validate\Check('foo'))->isValid();
+            })->message->contains('Error syntax');
         }
 
         public function testMax()
