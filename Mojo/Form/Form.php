@@ -8,6 +8,7 @@ namespace Mojo\Form {
         protected $_formid = null;
         protected $_theme = null;
         protected $_data = array();
+        protected $_check = true;
 
         public static function get($name)
         {
@@ -52,6 +53,30 @@ namespace Mojo\Form {
             }
 
             return $this;
+        }
+
+        public function fill(Array $data = array())
+        {
+            return $this->nocheck()->setData($data);
+        }
+
+        public function nocheck()
+        {
+            $this->_check = false;
+
+            return $this;
+        }
+
+        public function check()
+        {
+            $this->_check = true;
+
+            return $this;
+        }
+
+        public function getCheckStatus()
+        {
+            return $this->_check;
         }
 
         public function setTheme($object)

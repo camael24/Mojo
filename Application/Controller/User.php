@@ -51,6 +51,9 @@ namespace Application\Controller {
 
         public function newAction()
         {
+            $form    = \Mojo\Form\Form::get('admin.user');
+            $form->action('/user/');
+            $form->setData($this->post->all());
             $this->greut->render();
         }
 
@@ -63,14 +66,19 @@ namespace Application\Controller {
         {
             $session = new \Hoa\Session\Session('form');
             $form    = \Mojo\Form\Form::get('admin.user');
-            if ($this->post->check(['login', 'password', 'rpassword', 'email', 'name']) === false) {
+            $check   = new \Mojo\Form\Validate\Check('admin.user');
+            $form->setData($this->post->all());
+
+            if ($check->isValid() === false) {
                 $session['field'] = $this->post->all();
                 $this->redirect->redirect('newUser');
             }
 
-            var_dump($this->post->all());
-
-               exit('foo');
+            if ($form->getData('password') !== $form->getData('rpassword')) {
+                $this->flash->error('password', 'The password and confirmation are not egal');
+                $session['field'] = $this->post->all();
+                $this->redirect->redirect('newUser');
+            }
             $session->forgetMe();
             $user = new \Application\Model\Record\User();
             $bool = $user->newUser(
@@ -137,10 +145,63 @@ namespace Application\Controller {
 
         public function editAction($user_id)
         {
-            $model = new \Application\Model\Mapped\User($user_id);
-            $this->data->user = $model;
+            $model              = new \Application\Model\Mapped\User($user_id);
+            $this->data->user   = $model;
+            $form               = \Mojo\Form\Form::get('admin.user');
+            $form->insertBeforeLast('<div class="form-group"><label for="input" class="col-sm-2 control-label">Groups</label><div class="col-sm-10"><input type="text" value="" data-role="tagsinput" class="tag-groups" name="groups"/></div></div>');
+            $form->action('/user/'.$model['idUser']);
+
+            $form->fill([
+                'login'     => $model['login'],
+                'password'  => '',
+                'rpassword' => '',
+                'name'      => $model['name'],
+                'email'     => $model['email']
+            ]);
+
+            if (!empty($_POST)) {
+                $form->check();
+            }
 
             $this->greut->render();
+        }
+
+        public function updateAction($user_id)
+        {
+            $form    = \Mojo\Form\Form::get('admin.user');
+            $check   = new \Mojo\Form\Validate\Check('admin.user');
+            $model   = new \Application\Model\Mapped\User($user_id);
+
+            $form->setData($this->post->all());
+
+            if ($check->isValid() === false) {
+                $this->flash->error('Error', 'An error on a field');
+                $this->redirect->redirect('editUser', ['user_id' => $user_id]);
+            }
+
+            if ($form->getData('password') !== $form->getData('rpassword')) {
+                $this->flash->error('Password', 'The password and confirmation are not egal');
+                $this->redirect->redirect('editUser', ['user_id' => $user_id]);
+            }
+
+            $user = new \Application\Model\Record\User();
+            $new  = [
+                    'login'    => $this->post['login'],
+                    'password' => sha1($this->post['password']),
+                    'email'    => $this->post['email'],
+                    'name'     => $this->post['name']
+            ];
+            $old  = [
+                    'login'    => $model['login'],
+                    'password' => $model['password'],
+                    'email'    => $model['email'],
+                    'name'     => $model['name']
+            ];
+
+            $bool = $user->set($user_id, array_diff($new, $old));
+
+            $this->flash->success('New user', 'User update');
+            $this->redirect->redirect('indexUser');
         }
     }
 }

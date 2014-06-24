@@ -84,6 +84,13 @@ namespace Mojo\Form {
             return;
         }
 
+        public function insertBeforeLast($string)
+        {
+            $last           = array_pop($this->_child);
+            $this->_child[] = $string;
+            $this->_child[] = $last;
+        }
+
         public function getChilds()
         {
             return $this->_child;
@@ -149,12 +156,17 @@ namespace Mojo\Form {
 
         public function need($string)
         {
-            $array           = [',' , ' ', ';' , '_'];
+            $array           = ['_'];
             $string          = str_replace($array, '|', $string);
             $array           = explode('|', $string);
             $this->_need     = array_merge($array, $this->_need);
 
             return $this;
+        }
+
+        public function praspel($string)
+        {
+            return $this->need('praspel:'.$string);
         }
 
         public function getNeed()

@@ -5,19 +5,18 @@ namespace Mojo\Form\Validate {
     {
         private $_isValid = null;
         private $_id = null;
+        private $_errors = array();
 
         public function __construct($id)
         {
             $this->_id = $id;
         }
 
-        public function isValid(Array $data = array(), $revalidate = false)
+        public function isValid(Array $data = array())
         {
-            if ($revalidate === true or $this->_isValid === null) {
-                $this->_isValid = $this->validate($data);
-            }
+                $this->_errors  = array();
 
-            return $this->_isValid;
+                return $this->validate($data);
         }
 
         protected function validate(Array $data = array())
@@ -30,12 +29,14 @@ namespace Mojo\Form\Validate {
             }
 
             foreach ($form->getChilds() as $child) {
-                $name  = $child->getAttribute('name');
-                $iData = (array_key_exists($name, $data)) ? $data[$name] : null;
+                if (is_object($child)) {
+                    $name  = $child->getAttribute('name');
+                    $iData = (array_key_exists($name, $data)) ? $data[$name] : null;
 
-                foreach ($child->getNeed() as $val) {
-                    if ($this->valid($val, $child, $iData, $form) === false) {
-                        $valid = false;
+                    foreach ($child->getNeed() as $val) {
+                        if ($this->valid($val, $child, $iData, $form) === false) {
+                            $valid = false;
+                        }
                     }
                 }
             }
@@ -45,11 +46,24 @@ namespace Mojo\Form\Validate {
 
         private function valid($validator, $item, $data, $form)
         {
-            $validator   = explode(':', $validator);
-            $val  		 = array_shift($validator);
-            $instance 	 = dnew('\\Mojo\\Form\\Validate\\'.ucfirst($val));
+            $validator              = explode(':', $validator);
+            $val  		            = array_shift($validator);
+            $instance 	            = dnew('\\Mojo\\Form\\Validate\\'.ucfirst($val));
+            $bool                   = $instance->valid($data, $validator, $item, $form);
+            $name                   = $item->getAttribute('name');
+            $this->_errors[$name][] = $instance->getErrors();
 
-            return $instance->valid($data, $validator, $item, $form);
+            return $bool;
+        }
+
+        public function getErrors()
+        {
+            return $this->_errors;
+        }
+
+        public function setErrors(Array $error)
+        {
+            $this->_errors = $error;
         }
     }
 }

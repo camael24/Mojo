@@ -8,6 +8,11 @@ namespace Mojo\Form\Theme {
 
         public function form($form)
         {
+            $check = new \Mojo\Form\Validate\Check($form->getFormId());
+            if ($check->isValid([], true) === false && $form->getCheckStatus() === true) {
+                $this->setErrors($check->getErrors());
+            }
+
             $this->setForm($form);
             $out = '<form class="form-horizontal" role="form" '.$form->getAttributeAsString().'>';
             foreach ($form->getChilds() as $child) {
@@ -24,6 +29,10 @@ namespace Mojo\Form\Theme {
             $class = '';
             if (is_object($item)) {
                 $class = get_class($item);
+            }
+
+            if (is_string($item)) {
+                $class = 'string';
             }
 
             switch ($class) {
@@ -49,8 +58,10 @@ namespace Mojo\Form\Theme {
                     return $this->input($item);
                     break;
                 case 'Text':
-                default:
                     return $this->text($item);
+                    break;
+                default:
+                    return $item;
                     break;
             }
         }

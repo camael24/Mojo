@@ -20,10 +20,7 @@ namespace Tests\Units\Mojo\Form {
                 ->placeholder('Your Login')
                 ->need('email');
 
-            $form->setData([
-                'login' => 'hello'
-                ]);
-
+            $form->setData(['login' => 'hello']);
             $check = new \Mojo\Form\Validate\Check('foo');
 
             $this->boolean($check->isValid())

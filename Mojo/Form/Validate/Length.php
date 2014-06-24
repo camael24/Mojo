@@ -7,6 +7,7 @@ namespace Mojo\Form\Validate {
         protected $length  = 0;
         protected $max     = 0;
         protected $min     = 0;
+        protected $ex      = array();
 
         protected function _valid($data, $argument)
         {
@@ -17,6 +18,7 @@ namespace Mojo\Form\Validate {
 
             if (count($argument) == 1) {
                 $this->length = array_shift($argument);
+                $this->ex    = [$this->length];
 
                 return (strlen($data) == intval($this->length));
 
@@ -29,12 +31,21 @@ namespace Mojo\Form\Validate {
                 }
 
                 if ($this->min === '') {
+                    $this->_detail = 'The given value is too long, need <= %s char';
+                    $this->ex     = [$this->max];
+
                     return (strlen($data) <= $this->max);
                 }
 
                 if ($this->max === '') {
+                    $this->_detail = 'The given value is too long, need >= %s char';
+                    $this->ex     = [$this->min];
+
                     return (strlen($data) >= $this->min);
                 }
+
+                    $this->_detail = 'The given value is too long, need >= %s and <= %s char';
+                    $this->ex     = [$this->min, $this->max];
 
                 return (strlen($data) >= $this->min && strlen($data) <= $this->max);
             }
@@ -43,7 +54,7 @@ namespace Mojo\Form\Validate {
 
         protected function getDetail()
         {
-            return sprintf($this->_detail, $this->length);
+            return vsprintf($this->_detail, $this->ex);
         }
     }
 }

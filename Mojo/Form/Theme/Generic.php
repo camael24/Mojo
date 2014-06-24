@@ -18,7 +18,24 @@ namespace Mojo\Form\Theme {
 
         public function hasError($name)
         {
-            return array_key_exists($name, $this->_errors);
+
+            if (array_key_exists($name, $this->_errors) === false) {
+                return false;
+            }
+
+            foreach ($this->_errors[$name] as $value) {
+
+                if ($value !== null) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public function setErrors(Array $error)
+        {
+            $this->_errors = $error;
         }
 
         public function getError($name)

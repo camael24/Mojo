@@ -28,7 +28,6 @@
   </head>
 
   <body>
-
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -42,11 +41,13 @@
         </div>
         <div class="navbar-collapse collapse">
         <?php
-        if(array_key_exists('isLogged', $this->_data))
-          if($isLogged === true)
-            echo $this->renderFile('hoa://Application/View/Layout/Login.tpl.php');
-          else
-            echo $this->renderFile('hoa://Application/View/Layout/Logout.tpl.php');
+        if (array_key_exists('isLogged', $this->_data)) {
+    if ($isLogged === true) {
+        echo $this->renderFile('hoa://Application/View/Layout/Login.tpl.php');
+    } else {
+        echo $this->renderFile('hoa://Application/View/Layout/Logout.tpl.php');
+    }
+        }
         ?>
         </div><!--/.navbar-collapse -->
       </div>
@@ -58,24 +59,26 @@
       <!-- Example row of columns -->
 
     <?php
-
-      $f = new \Hoa\Session\Flash('notif.box');
-      if($f->isLocked() === false)
+    try {
+        $f = new \Hoa\Session\Flash('notif.box');
+    if ($f->isLocked() === false) {
         switch ($f['type']) {
-          case 'success':
-            echo '<div class="alert alert-success"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
-            break;
-          case 'alert':
-            echo '<div class="alert alert-danger"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
-            break;
-          default:
-            # code...
-            break;
+            case 'success':
+                echo '<div class="alert alert-success"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
+                break;
+            case 'error':
+            case 'alert':
+            default:
+                echo '<div class="alert alert-danger"><strong>'.$f['title'].'</strong><br />'.$f['content'].'</div>';
+                break;
         }
+    }
+    } catch (\Hoa\Session\Exception\Locked $e) {
 
-        $this->block('content'); $this->endBlock();
-
-      ?>
+    }
+    $this->block('content');
+    $this->endBlock();
+    ?>
 
        <footer>
         <p>&copy; Mojo CMS</p>
