@@ -22,7 +22,7 @@ $form[] = (new \Mojo\Form\Input())
 $form[] = (new \Mojo\Form\Input())
             ->id('rpassword')
             ->type('password')
-            ->label('Password')
+            ->label('Confirm password')
             ->placeholder('Confirm Your password')
             ->need('required|length:5:');
 

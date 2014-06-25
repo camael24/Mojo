@@ -168,9 +168,15 @@ namespace Application\Controller {
 
         public function updateAction($user_id)
         {
-            $form    = \Mojo\Form\Form::get('admin.user');
-            $check   = new \Mojo\Form\Validate\Check('admin.user');
-            $model   = new \Application\Model\Mapped\User($user_id);
+            $form             = \Mojo\Form\Form::get('admin.user');
+            $check            = new \Mojo\Form\Validate\Check('admin.user');
+            $model            = new \Application\Model\Mapped\User($user_id);
+            $form['password']
+                            ->optionnal()
+                            ->need('length:5:');
+            $form['rpassword']
+                            ->optionnal()
+                            ->need('length:5:');
 
             $form->setData($this->post->all());
 

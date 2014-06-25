@@ -33,6 +33,10 @@ namespace Mojo\Form\Validate {
                     $name  = $child->getAttribute('name');
                     $iData = (array_key_exists($name, $data)) ? $data[$name] : null;
 
+                    if ($child->isOptionnal() === true and (strlen($iData) === 0)) {
+                            return true;
+                    }
+
                     foreach ($child->getNeed() as $val) {
                         if ($this->valid($val, $child, $iData, $form) === false) {
                             $valid = false;

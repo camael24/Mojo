@@ -10,6 +10,7 @@ namespace Mojo\Form {
         protected $_id = null;
         protected $_label = null;
         protected $_parent = null;
+        protected $_optionnal = false;
         protected $_need = array();
 
         public function __call($name, $value)
@@ -73,7 +74,14 @@ namespace Mojo\Form {
         public function offsetSet($offset, $value)
         {
             if ($offset === null) {
-                    $this->_child[] = $value;
+                if (is_object($value) === true) {
+                    if (($s = $value->getAttribute('name')) !== null) {
+                        $this->_child[$s] = $value;
+
+                        return;
+                    }
+                }
+                        $this->_child[] = $value;
             } else {
                 $this->_child[$offset] = $value;
             }
@@ -167,6 +175,18 @@ namespace Mojo\Form {
         public function praspel($string)
         {
             return $this->need('praspel:'.$string);
+        }
+
+        public function optionnal()
+        {
+            $this->_optionnal = true;
+
+            return $this;
+        }
+
+        public function isOptionnal()
+        {
+            return $this->_optionnal;
         }
 
         public function getNeed()

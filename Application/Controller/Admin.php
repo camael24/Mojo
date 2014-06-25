@@ -11,7 +11,7 @@ namespace Application\Controller {
 
             //$this->flash->alert('foo' , 'bar');
             if ($this->acl->need('admin.panel') === false) {
-                $this->flash->alert('Acces unauthorized' , '');
+                $this->flash->alert('Acces unauthorized', '');
                 $this->redirect->redirect('root');
             }
 
@@ -22,27 +22,31 @@ namespace Application\Controller {
             $page = $page -1;
             $total = $user->count();
 
-            if($page <= 0 )
+            if ($page <= 0) {
                 $page = 0;
+            }
 
-            if($page > $total)
+            if ($page > $total) {
                 $page = $total;
+            }
 
             // Page ... non opérationnel
 
             $nbPerPage = 15;
-            $all = $user->getAll($page , $nbPerPage , false);
+            $all = $user->getAll($page, $nbPerPage, false);
             $this->data->page = $page;
             $this->data->total = ($total/$nbPerPage);
             $this->data->all = $all;
 
             $previous = $page - 1;
-            if($previous <= 0)
+            if ($previous <= 0) {
                 $previous = 0;
+            }
 
             $next = $page + 1;
-            if($next >= $total)
+            if ($next >= $total) {
                 $next = $total;
+            }
 
             $this->data->prev = $previous;
             $this->data->next  = $next;
@@ -53,8 +57,8 @@ namespace Application\Controller {
 
         public function createAction()
         {
-            if ($this->post->check(['login' , 'password']) !== true) {
-                $this->flash->alert('Error' , 'Erreur dans le formulaire un champ est manquant ou vide');
+            if ($this->post->check(['login', 'password']) !== true) {
+                $this->flash->alert('Error', 'Erreur dans le formulaire un champ est manquant ou vide');
                 $this->redirect->redirect('indexUser');
             } else {
 
@@ -64,21 +68,24 @@ namespace Application\Controller {
 
                 if (($data =$user->connect($login, $pass)) !== false) {
                     $user->getByLogin($login);
-                    $u           = new \Hoa\Session\Session('user');
-                    $u['id']     = $data['idUser'];
-                    $u['name']   = $data['name'];
-                    $u['login']  = $data['login'];
-                    $u['email']  = $data['email'];
-                    $u['token']  = $data['token'];
-                    $u['logged'] = true;
+                    $u                = new \Hoa\Session\Session('user');
+                    $m                = new \Application\Model\Mapped\User($data['idUser']);
+                    $u['id']          = $data['idUser'];
+                    $u['name']        = $data['name'];
+                    $u['login']       = $data['login'];
+                    $u['email']       = $data['email'];
+                    $u['token']       = $data['token'];
+                    $u['logged']      = true;
+                    $m['connectTime'] = time();
 
+                    $m->update();
                     $this->data->isLogged   = true;
                     $this->data->id         = $u['id'];
                     $this->data->name       = $u['name'];
 
-                    $this->flash->success('Welcome' , '');
+                    $this->flash->success('Welcome', '');
                 } else {
-                    $this->flash->alert('Error' , 'Credential non authorized');
+                    $this->flash->alert('Error', 'Credential non authorized');
                     $this->redirect->redirect('indexUser');
                 }
 
@@ -88,8 +95,7 @@ namespace Application\Controller {
 
         public function userAction()
         {
-            $this->greut->render(['Admin' , 'Index']);
+            $this->greut->render(['Admin', 'Index']);
         }
-
     }
 }
