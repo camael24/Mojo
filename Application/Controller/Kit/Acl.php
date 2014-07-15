@@ -1,5 +1,6 @@
 <?php
 namespace Application\Controller\Kit {
+
     class Acl extends \Sohoa\Framework\Kit\Kitable
     {
         public function need($perm)
@@ -8,12 +9,11 @@ namespace Application\Controller\Kit {
             $name = $user['login'];
             $acl  = \Hoa\Acl\Acl::getInstance();
 
-            if($name !== null)
-
-                return $acl->isAllowed($name , $perm);
+            if ($name !== null) {
+                return $acl->isAllowed($name, $perm);
+            }
 
             return false;
         }
-
     }
 }

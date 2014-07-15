@@ -20,11 +20,12 @@ CREATE TABLE IF NOT EXISTS user_group (
   PRIMARY KEY (idUserGroup)
 );
 
-CREATE TABLE IF NOT EXISTS groupe (
-    idGroupe            INTEGER,
+CREATE TABLE IF NOT EXISTS `group` (
+    idGroup             INTEGER,
     name                VARCHAR(255),
     label               VARCHAR(255),
-  PRIMARY KEY (idGroupe)
+    inherit             VARCHAR(255),
+  PRIMARY KEY (idGroup)
 );
 
 CREATE TABLE IF NOT EXISTS permission (
@@ -33,9 +34,9 @@ CREATE TABLE IF NOT EXISTS permission (
   PRIMARY KEY (idPermission)
 );
 
-CREATE TABLE IF NOT EXISTS groupe_permission (
+CREATE TABLE IF NOT EXISTS group_permission (
     idGroupePermission  INTEGER,
-    refGroupe           VARCHAR(25),
+    refGroup            VARCHAR(25),
     refPermission       VARCHAR(25),
   PRIMARY KEY (idGroupePermission)
 );

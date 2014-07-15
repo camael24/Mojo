@@ -1,15 +1,30 @@
 <?php
 namespace Application\Model\Record {
-    class Acl
+
+    use Hoa\Database\Query\Insert;
+    use Hoa\Database\Query\Select;
+
+    class Acl extends \Mojo\Model\ActiveRecord
     {
+
         public function getGroup()
         {
-            return [
-                ['id' => 'guest' ,'label' => 'Invité'		 , 'inherit' => []],
-                ['id' => 'user'  ,'label' => 'Utilisateur'   , 'inherit' => ['guest']],
-                ['id' => 'mod'   ,'label' => 'Moderateur'    , 'inherit' => ['user']],
-                ['id' => 'admin' ,'label' => 'Administrateur', 'inherit' => ['mod']]
-            ];
+            $select = new Select;
+            $select
+                ->from('`group`');
+
+            $return = $this->sql($select)->all();
+            $group  = [];
+
+            foreach ($return as $value) {
+                $group[] =  [
+                                'id'    => $value['name'] ,
+                                'label' => $value['label'],
+                                'inherit' => explode(',', $value['inherit'])
+                            ];
+            }
+
+            return $group;
         }
 
         public function getPermissionByGroup()
@@ -36,6 +51,5 @@ namespace Application\Model\Record {
             ];
 
         }
-
     }
 }

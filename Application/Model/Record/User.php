@@ -8,7 +8,7 @@ namespace Application\Model\Record {
     {
         public function sample()
         {
-                 $this->sql('DELETE FROM user;');
+            $this->sql('DELETE FROM user;');
 
             $insert = new Insert;
             $insert

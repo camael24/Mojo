@@ -51,6 +51,7 @@ namespace Application\Controller {
 
         public function newAction()
         {
+
             $form    = \Mojo\Form\Form::get('admin.user');
             $form->action('/user/');
             $form->setData($this->post->all());
@@ -180,6 +181,10 @@ namespace Application\Controller {
 
             $form->setData($this->post->all());
 
+            echo '<pre>'.print_r($this->post->all(), true).'</pre>';
+
+            var_dump($check->isValid());
+
             if ($check->isValid() === false) {
                 $this->flash->error('Error', 'An error on a field');
                 $this->redirect->redirect('editUser', ['user_id' => $user_id]);
@@ -204,7 +209,14 @@ namespace Application\Controller {
                     'name'     => $model['name']
             ];
 
-            $bool = $user->set($user_id, array_diff($new, $old));
+            $diff = array_diff($new, $old);
+
+            if ($this->post['password'] === '') {
+                unset($diff['password']);
+            }
+
+            echo '<pre>'.print_r($diff, true).'</pre>';
+            $bool = $user->set($user_id, $diff);
 
             $this->flash->success('New user', 'User update');
             $this->redirect->redirect('indexUser');

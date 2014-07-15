@@ -30,6 +30,7 @@ namespace Mojo\Form\Validate {
 
             foreach ($form->getChilds() as $child) {
                 if (is_object($child)) {
+
                     $name  = $child->getAttribute('name');
                     $iData = (array_key_exists($name, $data)) ? $data[$name] : null;
 

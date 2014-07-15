@@ -1,9 +1,11 @@
 <?php
 namespace Application\Controller\Generic {
-     use Sohoa\Framework\Kit;
+
+    use Sohoa\Framework\Kit;
+
     class Generic extends Kit
     {
-         public function construct()
+        public function construct()
         {
 
             parent::construct();
@@ -13,9 +15,10 @@ namespace Application\Controller\Generic {
             $model = new \Application\Model\Record\User();
             $name  = $user['login'];
             $group = $model->getGroup($name);
+            $aUser = new \Hoa\Acl\User($name, $user['name']);
 
-            $acl->addUser(new \Hoa\Acl\User($name , $user['name'] , $group));
-
+            $aUser->addGroup($group);
+            $acl->addUser($aUser);
         }
     }
 }

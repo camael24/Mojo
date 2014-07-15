@@ -11,8 +11,8 @@ namespace Application\Controller {
 
             //$this->flash->alert('foo' , 'bar');
             if ($this->acl->need('admin.panel') === false) {
-                $this->flash->alert('Acces unauthorized', '');
-                $this->redirect->redirect('root');
+                //$this->flash->alert('Acces unauthorized', '');
+                //$this->redirect->redirect('root');
             }
 
             $user = new \Application\Model\Record\User();
@@ -66,7 +66,7 @@ namespace Application\Controller {
                 $login  = $this->post['login'];
                 $pass   = $this->post['password'];
 
-                if (($data =$user->connect($login, $pass)) !== false) {
+                if (($data = $user->connect($login, $pass)) !== false) {
                     $user->getByLogin($login);
                     $u                = new \Hoa\Session\Session('user');
                     $m                = new \Application\Model\Mapped\User($data['idUser']);
@@ -82,6 +82,7 @@ namespace Application\Controller {
                     $this->data->isLogged   = true;
                     $this->data->id         = $u['id'];
                     $this->data->name       = $u['name'];
+                    $acl                    = \Hoa\Acl\Acl::getInstance();
 
                     $this->flash->success('Welcome', '');
                 } else {

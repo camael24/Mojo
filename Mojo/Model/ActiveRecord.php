@@ -1,19 +1,20 @@
 <?php
 
 namespace Mojo\Model {
+
     class ActiveRecord
     {
-            protected static $_log = array();
-            protected  $_defaultMappingLayer = 'default';
-            protected  $_result = array();
+        protected static $_log = array();
+        protected  $_defaultMappingLayer = 'default';
+        protected  $_result = array();
 
-            public function getMappingLayer($name = null)
-            {
-                if($name === null)
-                    $name = $this->_defaultMappingLayer;
+        public function getMappingLayer($name = null)
+        {
+            if($name === null)
+                $name = $this->_defaultMappingLayer;
 
-                return \Hoa\Database\Dal::getInstance($name);
-            }
+            return \Hoa\Database\Dal::getInstance($name);
+        }
 
         public function sql($sql, Array $data = array() )
         {

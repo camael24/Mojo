@@ -1,12 +1,6 @@
 <ul class="nav navbar-nav pull-right">
     <?php if ($id !== '') {?>
-    <li class="dropdown">
-        <a href="" class="btn dropdown-toggle" data-toggle="dropdown">Group <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a href="#">Group</a></li>
-            <li><a href="#">New User/Group</a></li>
-        </ul>
-    </li>
+        <li><a href="/group/">Group</a></li>
     <?php } ?>
      <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Permission <b class="caret"></b></a>
